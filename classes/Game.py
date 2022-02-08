@@ -7,14 +7,14 @@ class Game:
         self.__screen = screen
         self.__object_dict = {}
 
-    def __add_objects_to_screen(self):
+    def __display_objects_to_screen(self):
         """
         The function goes over any object that is on the screen (using the dictionary that contains objects)
         and displays the objects on the screen.
         :return: None
         """
         for value in self.__object_dict.values():
-            value.add_image_to_screen()
+            value.display_image_to_screen()
 
     def on_click(self, mouse_pos):
         """

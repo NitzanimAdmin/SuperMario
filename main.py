@@ -11,8 +11,18 @@ def main():
 
     # pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
 
+    # Set background
+    background_img_path = 'Images/background.png'
+    background = pygame.image.load(background_img_path)
+    background = pygame.transform.scale(background,
+                                        (WINDOW_WIDTH, WINDOW_HEIGHT))
+    screen.blit(background, (0, 0))
+
+    pygame.display.set_caption('Super Mario')
+
     global new_game
     new_game = Game(screen)
+    trying = MovingObject()
 
     # Display all drawings we have defined
     pygame.display.flip()
