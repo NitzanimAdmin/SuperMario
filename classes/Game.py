@@ -1,11 +1,13 @@
 import pygame
 from constants import *
+from classes.MovingObject import MovingObject
 
 
 class Game:
     def __init__(self, screen):
         self.__screen = screen
-        self.__object_dict = {}
+        yuval = MovingObject(screen, 100, 50, 50, 'Images/blue_enemy.png', 1)
+        self.__object_dict = {yuval}
 
     def __display_objects_to_screen(self):
         """

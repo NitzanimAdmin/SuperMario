@@ -23,7 +23,7 @@ def main():
 
     global new_game
     new_game = Game(screen)
-    # yesss = MovingObject(screen, 40, 60, 60, 'Images/blue_enemy.png')
+
     # Display all drawings we have defined
     pygame.display.flip()
 
