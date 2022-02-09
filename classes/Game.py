@@ -1,4 +1,5 @@
 import pygame
+import MovingObject
 from constants import *
 from classes.MovingObject import MovingObject
 
@@ -9,7 +10,12 @@ class Game:
         yuval = MovingObject(screen, 100, 50, 50, 'Images/blue_enemy.png', 1)
         self.__object_dict = {yuval}
 
-    def __display_objects_to_screen(self):
+    def move_objects(self):
+        for value in self.__object_dict.values():
+            if isinstance(value, MovingObject):
+                value.move_object()
+
+    def display_objects_to_screen(self):
         """
         The function goes over any object that is on the screen (using the dictionary that contains objects)
         and displays the objects on the screen.

@@ -57,6 +57,8 @@ def running():
                 status = False
             else:
                 new_game.typing(event.key)
+        new_game.move_objects()
+        new_game.display_objects_to_screen()
     return status
 
 
