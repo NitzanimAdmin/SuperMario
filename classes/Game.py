@@ -1,4 +1,5 @@
 import pygame
+import MovingObject
 from constants import *
 
 
@@ -7,7 +8,12 @@ class Game:
         self.__screen = screen
         self.__object_dict = {}
 
-    def __display_objects_to_screen(self):
+    def move_objects(self):
+        for value in self.__object_dict.values():
+            if isinstance(value, MovingObject):
+                value.move_object()
+
+    def display_objects_to_screen(self):
         """
         The function goes over any object that is on the screen (using the dictionary that contains objects)
         and displays the objects on the screen.
