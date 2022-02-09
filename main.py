@@ -1,5 +1,6 @@
 from classes.Game import *
 import pygame
+from classes.MovingObject import MovingObject
 new_game = None
 
 
@@ -22,8 +23,7 @@ def main():
 
     global new_game
     new_game = Game(screen)
-    trying = MovingObject()
-
+    # yesss = MovingObject(screen, 40, 60, 60, 'Images/blue_enemy.png')
     # Display all drawings we have defined
     pygame.display.flip()
 
