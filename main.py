@@ -1,6 +1,6 @@
 from classes.Game import *
 import pygame
-from classes.MovingObject import MovingObject
+from classes.ImageObject import ImageObject
 new_game = None
 
 
@@ -12,13 +12,6 @@ def main():
 
     # pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
 
-    # Set background
-    background_img_path = 'Images/background.png'
-    background = pygame.image.load(background_img_path)
-    background = pygame.transform.scale(background,
-                                        (WINDOW_WIDTH, WINDOW_HEIGHT))
-    screen.blit(background, (0, 0))
-
     pygame.display.set_caption('Super Mario')
 
     global new_game
@@ -27,16 +20,16 @@ def main():
     # Display all drawings we have defined
     pygame.display.flip()
 
-    status = running()
+    status = running(screen)
     while status:
         # Check if the player wants to end the game
-        status = running()
+        status = running(screen)
 
     # Close The window
     pygame.quit()
 
 
-def running():
+def running(screen):
     """
     The function checks when the game will end.
     In addition, the function checks the mouse click events.
@@ -57,8 +50,12 @@ def running():
                 status = False
             else:
                 new_game.typing(event.key)
-        new_game.move_objects()
-        new_game.display_objects_to_screen()
+
+        if status:
+
+            new_game.move_objects()
+            new_game.display_objects_to_screen()
+
     return status
 
 

@@ -1,17 +1,26 @@
 import pygame
-import MovingObject
 from constants import *
 from classes.MovingObject import MovingObject
+from classes.ImageObject import ImageObject
 
 
 class Game:
     def __init__(self, screen):
         self.__screen = screen
-        yuval = MovingObject(screen, 100, 50, 50, 'Images/blue_enemy.png', 1)
-        self.__object_dict = {yuval}
+        self.__object_list = []
+        self.add_initial_objects()
+
+    def add_initial_objects(self):
+        background = ImageObject(self.__screen, 0, 0, WINDOW_WIDTH, WINDOW_HEIGHT, 'Images/background.png')
+        self.__object_list.append(background)
+
+        yuval = MovingObject(self.__screen, 100, 50, 50, 'Images/blue_enemy.png', 20)
+        yuval.display_image_to_screen()
+        self.__object_list.append(yuval)
+
 
     def move_objects(self):
-        for value in self.__object_dict.values():
+        for value in self.__object_list:
             if isinstance(value, MovingObject):
                 value.move_object()
 
@@ -21,7 +30,7 @@ class Game:
         and displays the objects on the screen.
         :return: None
         """
-        for value in self.__object_dict.values():
+        for value in self.__object_list:
             value.display_image_to_screen()
 
     def on_click(self, mouse_pos):
