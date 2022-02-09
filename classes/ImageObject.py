@@ -10,6 +10,7 @@ class ImageObject:
         self._height = height
         self._img_path = img_path
 
+
     def display_image_to_screen(self):
         """
         Add the image of the given size to the screen in the desired location.

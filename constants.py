@@ -1,8 +1,30 @@
 WINDOW_WIDTH = 1110
 WINDOW_HEIGHT = 668
-
+"""
 # ascii values
 RIGHT_ARROW = 1073741903
 LEFT_ARROW = 1073741904
 DOWN_ARROW = 1073741905
 UP_ARROW = 1073741906
+"""
+SPEED = 4
+ENEMY_SIZE = 50
+# BLUE_ENEMY_LOCATION = 'Images/blue_enemy.png'
+SPACE_BETWEEN_MOVING_OBJECTS_X = 500
+SPACE_BETWEEN_MOVING_OBJECTS_Y = 100
+TOP_Y_YOS = 450
+GROUND_MOVING_OBJECTS_IMAGES = ['images/blue_enemy.png', 'images/brown_enemy.png', 'images/red_enemy.png']
+SKY_MOVING_OBJECTS_IMAGES = ['images/blue_bird.png', 'images/red_bird.png']
+
+# Super Mario
+SUPER_MARIO_START_X_POS = 50
+SUPER_MARIO_START_Y_POS = 500
+SUPER_MARIO_HEIGHT = 81 # 54
+SUPER_MARIO_WIDTH = 69 # 46
+SUPER_MARIO_IMG_PATH = 'images/super_mario.png'
+SUPER_MARIO_JUMP_IMG_PATH = 'images/mario_jumps.png'
+SUPER_MARIO_BEND_IMG_PATH = 'images/mario_bends.png'
+MINI_MOVE_IN_Y = 5
+JUMP_SPEED = 6
+LIMIT_FOR_JUMP = 380
+X_MOVE_DISTANCE_IN_JUMP = 2

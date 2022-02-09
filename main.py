@@ -20,22 +20,39 @@ def main():
     # Display all drawings we have defined
     pygame.display.flip()
 
-    status = running(screen)
+    status = running()
     while status:
         # Check if the player wants to end the game
-        status = running(screen)
+        status = running()
+        on_tick()
 
     # Close The window
     pygame.quit()
 
 
-def running(screen):
+def on_tick():
+    new_game.move_objects()
+    new_game.display_objects_to_screen()
+    keys = pygame.key.get_pressed()
+    if keys[pygame.K_LEFT]:
+        new_game.move_mario("left")
+    elif keys[pygame.K_RIGHT]:
+        new_game.move_mario("right")
+    if keys[pygame.K_UP]:
+        new_game.move_mario("jump")
+    elif keys[pygame.K_DOWN]:
+        new_game.move_mario("bend")
+    pygame.display.flip()
+
+
+def running():
     """
     The function checks when the game will end.
     In addition, the function checks the mouse click events.
     :return: None
     """
     status = True
+
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             pygame.quit()
@@ -48,13 +65,6 @@ def running(screen):
             if event.key == pygame.K_ESCAPE:
                 pygame.quit()
                 status = False
-            else:
-                new_game.typing(event.key)
-
-        if status:
-
-            new_game.move_objects()
-            new_game.display_objects_to_screen()
 
     return status
 
