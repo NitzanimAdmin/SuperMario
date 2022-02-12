@@ -1,6 +1,5 @@
 from classes.Game import *
 import pygame
-from classes.ImageObject import ImageObject
 new_game = None
 
 
@@ -10,8 +9,6 @@ def main():
     screen_size = (WINDOW_WIDTH, WINDOW_HEIGHT)
     screen = pygame.display.set_mode(screen_size)
 
-    # pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
-
     pygame.display.set_caption('Super Mario')
 
     global new_game
@@ -20,33 +17,34 @@ def main():
     # Display all drawings we have defined
     pygame.display.flip()
 
-    game_over = False
     status = running()
     while status:
-        if game_over:
+        if new_game.is_game_over():
+            print('WHER')
             show_game_over(screen)
 
         # Check if the player wants to end the game
         status = running()
         if status:
             on_tick()
-
+        # draw_text(screen, "GAME OVER", 64, WINDOW_WIDTH / 2, WINDOW_HEIGHT / 4)
     # Close The window
     pygame.quit()
 
 
 def on_tick():
-    new_game.move_objects()
-    new_game.display_objects_to_screen()
-    keys = pygame.key.get_pressed()
-    if keys[pygame.K_LEFT]:
-        new_game.move_mario("left")
-    elif keys[pygame.K_RIGHT]:
-        new_game.move_mario("right")
-    if keys[pygame.K_UP]:
-        new_game.move_mario("jump")
-    elif keys[pygame.K_DOWN]:
-        new_game.move_mario("bend")
+    if not new_game.is_game_over():
+        new_game.move_objects()
+        new_game.display_objects_to_screen()
+        keys = pygame.key.get_pressed()
+        if keys[pygame.K_LEFT]:
+            new_game.move_mario("left")
+        elif keys[pygame.K_RIGHT]:
+            new_game.move_mario("right")
+        if keys[pygame.K_UP]:
+            new_game.move_mario("jump")
+        elif keys[pygame.K_DOWN]:
+            new_game.move_mario("bend")
 
     pygame.display.flip()
 
@@ -71,26 +69,24 @@ def running():
             if event.key == pygame.K_ESCAPE:
                 pygame.quit()
                 status = False
-        elif new_game.is_game_over():
-            print(True)
-            status = False
 
     return status
 
 
 def show_game_over(screen):
-    draw_text(screen, "GAME OVER", 64, WINDOW_WIDTH / 2, WINDOW_HEIGHT / 4)
+    # draw_text(screen, "GAME OVER", 64, WINDOW_WIDTH / 2, WINDOW_HEIGHT / 4)
     pygame.display.flip()
     waiting = True
     while waiting:
         for event in pygame.event.get():
-            pygame.quit()
+            if event.type == pygame.QUIT or event.type == pygame.KEYDOWN:
+                pygame.quit()
 
 
-def draw_text(screen, text, size, width, height):
-    font = pygame.font.SysFont(None, size)
-    img = font.render(text, True, BLACK)
-    screen.blit(img, (20, 20))
+# def draw_text(screen, text, size, width, height):
+#     font = pygame.font.SysFont(, size)
+#     img = font.render(text, True, BLACK)
+#     screen.blit(img, (20, 20))
 
 
 main()

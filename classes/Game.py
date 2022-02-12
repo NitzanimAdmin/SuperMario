@@ -15,6 +15,11 @@ class Game:
         self.__mario = None
         self.add_initial_objects()
         self.__can_move = True
+        self.__is_game_over = False
+
+    def is_game_over(self):
+        self.check_if_game_over()
+        return self.__is_game_over
 
     def add_initial_objects(self):
         background = ImageObject(self.__screen, 0, 0, WINDOW_WIDTH, WINDOW_HEIGHT, 'Images/background.png')
@@ -94,7 +99,8 @@ class Game:
         self.display_objects_to_screen()
 
         ans = self.__mario.jump()
-        while ans != "done":
+
+        while not self.is_game_over() and ans != "done":
             self.move_objects()
             self.display_objects_to_screen()
             ans = self.__mario.jump()
@@ -114,17 +120,17 @@ class Game:
 
         self.__can_move = True
 
-    def is_game_over(self):
+    def check_if_game_over(self):
         for obj in self.__object_list:
             if isinstance(obj, Obstacle):
                 obj_location = {'x': obj.x_pos, 'y': obj.y_pos}
                 obj_size = {'width': obj.width, 'height': obj.height}
 
                 if self.__mario.is_object_on_image(obj_location, obj_size):
-                    return True
-                else:
-                    return False
-    """
+                    self.__is_game_over = True
+
+
+"""
     def typing(self, ascii_val):
         
         The function is called as soon as one of the keyboard keys is pressed.
