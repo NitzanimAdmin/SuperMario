@@ -2,6 +2,7 @@ import pygame
 import random
 from constants import *
 from classes.MovingObject import MovingObject
+from classes.Obstacle import Obstacle
 from classes.ImageObject import ImageObject
 from classes.Mario import Mario
 import time
@@ -37,11 +38,11 @@ class Game:
             moving_objects_image = SKY_MOVING_OBJECTS_IMAGES[rand_moving_object - 1]
 
         y_pos = TOP_Y_YOS + rand_height * SPACE_BETWEEN_MOVING_OBJECTS_Y
-        blue_enemy = MovingObject(self.__screen,
-                                  WINDOW_WIDTH - ENEMY_SIZE + SPACE_BETWEEN_MOVING_OBJECTS_X * space_between_obj,
-                                  y_pos, ENEMY_SIZE, ENEMY_SIZE, moving_objects_image, SPEED)
+        obstacle = Obstacle(self.__screen,
+                            WINDOW_WIDTH - ENEMY_SIZE + SPACE_BETWEEN_MOVING_OBJECTS_X * space_between_obj,
+                            y_pos, ENEMY_SIZE, ENEMY_SIZE, moving_objects_image, SPEED)
 
-        self.__object_list.append(blue_enemy)
+        self.__object_list.append(obstacle)
 
     def move_objects(self):
         for value in self.__object_list:
@@ -98,6 +99,7 @@ class Game:
             self.display_objects_to_screen()
             ans = self.__mario.jump()
 
+
         # for i in range(10):
         #     self._y_pos -= MINI_MOVE_IN_Y
         #     pygame.display.flip()
@@ -112,6 +114,16 @@ class Game:
 
         self.__can_move = True
 
+    def is_game_over(self):
+        for obj in self.__object_list:
+            if isinstance(obj, Obstacle):
+                obj_location = {'x': obj.x_pos, 'y': obj.y_pos}
+                obj_size = {'width': obj.width, 'height': obj.height}
+
+                if self.__mario.is_object_on_image(obj_location, obj_size):
+                    return True
+                else:
+                    return False
     """
     def typing(self, ascii_val):
         

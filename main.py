@@ -20,11 +20,16 @@ def main():
     # Display all drawings we have defined
     pygame.display.flip()
 
+    game_over = False
     status = running()
     while status:
+        if game_over:
+            show_game_over(screen)
+
         # Check if the player wants to end the game
         status = running()
-        on_tick()
+        if status:
+            on_tick()
 
     # Close The window
     pygame.quit()
@@ -42,6 +47,7 @@ def on_tick():
         new_game.move_mario("jump")
     elif keys[pygame.K_DOWN]:
         new_game.move_mario("bend")
+
     pygame.display.flip()
 
 
@@ -65,8 +71,26 @@ def running():
             if event.key == pygame.K_ESCAPE:
                 pygame.quit()
                 status = False
+        elif new_game.is_game_over():
+            print(True)
+            status = False
 
     return status
+
+
+def show_game_over(screen):
+    draw_text(screen, "GAME OVER", 64, WINDOW_WIDTH / 2, WINDOW_HEIGHT / 4)
+    pygame.display.flip()
+    waiting = True
+    while waiting:
+        for event in pygame.event.get():
+            pygame.quit()
+
+
+def draw_text(screen, text, size, width, height):
+    font = pygame.font.SysFont(None, size)
+    img = font.render(text, True, BLACK)
+    screen.blit(img, (20, 20))
 
 
 main()
