@@ -6,7 +6,6 @@ class Mario(MovingObject):
     def __init__(self, screen, x_pos, y_pos, width, height, img_path):
         MovingObject.__init__(self, screen, x_pos, y_pos, width, height, img_path, 7)
         self.__can_move = True
-        # self.__stage_in_jump = 0
         self.__jump_direction = ""
 
     def move_right(self):
@@ -29,24 +28,47 @@ class Mario(MovingObject):
                 return "down"
             else:
                 self._y_pos -= JUMP_SPEED
-                self._x_pos += X_MOVE_DISTANCE_IN_JUMP
+                self._x_pos += X_MOVE_DISTANCE_IN_JUMP_AND_BEND
                 return "up"
         elif self.__jump_direction == "down":
             if self._y_pos > SUPER_MARIO_START_Y_POS:
                 self.__jump_direction = ""
                 self.__can_move = True
+                self._y_pos = SUPER_MARIO_START_Y_POS
                 self._img_path = SUPER_MARIO_IMG_PATH
                 return "done"
             else:
                 self._y_pos += JUMP_SPEED
-                self._x_pos += X_MOVE_DISTANCE_IN_JUMP
+                self._x_pos += X_MOVE_DISTANCE_IN_JUMP_AND_BEND
                 return "down"
 
     def bend(self):
-        if not self.__can_move:
-            return
-
         self.__can_move = False
-        # if (self._y_pos + self._height) + self._speed < WINDOW_HEIGHT:
-        #     self._y_pos += self._speed
-        self.__can_move = True
+        self._img_path = SUPER_MARIO_BEND_IMG_PATH
+        if self.__jump_direction == "":
+            self.__jump_direction = "down"
+            return "down"
+        elif self.__jump_direction == "down":
+            # if self._y_pos > LIMIT_FOR_BEND:
+            if self._height < LIMIT_FOR_BEND:
+                self.__jump_direction = "up"
+                return "up"
+            else:
+                self._y_pos += BEND_SPEED
+                self._height -= BEND_HEIGHT_CHANGE
+                self._width -= BEND_WIDTH_CHANGE
+                self._x_pos += X_MOVE_DISTANCE_IN_JUMP_AND_BEND
+                return "down"
+        elif self.__jump_direction == "up":
+            if self._y_pos < SUPER_MARIO_START_Y_POS:
+                self.__jump_direction = ""
+                self.__can_move = True
+                self._y_pos = SUPER_MARIO_START_Y_POS
+                self._img_path = SUPER_MARIO_IMG_PATH
+                return "done"
+            else:
+                self._y_pos -= BEND_SPEED
+                self._height += BEND_HEIGHT_CHANGE
+                self._width += BEND_WIDTH_CHANGE
+                self._x_pos += X_MOVE_DISTANCE_IN_JUMP_AND_BEND
+                return "up"
