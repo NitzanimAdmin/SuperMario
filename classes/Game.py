@@ -69,7 +69,7 @@ class Game:
 
         self.__mario.display_image_to_screen()
 
-        pygame.display.flip()
+
 
     def on_click(self, mouse_pos):
         """
@@ -104,7 +104,7 @@ class Game:
             self.move_objects()
             self.display_objects_to_screen()
             ans = self.__mario.jump()
-
+            pygame.display.flip()
 
         # for i in range(10):
         #     self._y_pos -= MINI_MOVE_IN_Y

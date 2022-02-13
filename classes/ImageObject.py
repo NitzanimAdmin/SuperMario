@@ -21,7 +21,7 @@ class ImageObject:
         self._screen.blit(img, (self._x_pos, self._y_pos))
 
         # Update the screen
-        pygame.display.flip()
+        # pygame.display.flip()
 
     def is_object_on_image(self, obj_location, obj_size):
         if (obj_location['x'] < self._x_pos + self._width and

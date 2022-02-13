@@ -46,8 +46,6 @@ def on_tick():
         elif keys[pygame.K_DOWN]:
             new_game.move_mario("bend")
 
-    pygame.display.flip()
-
 
 def running():
     """
@@ -69,6 +67,8 @@ def running():
             if event.key == pygame.K_ESCAPE:
                 pygame.quit()
                 status = False
+
+    pygame.display.flip()
 
     return status
 
