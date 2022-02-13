@@ -3,6 +3,7 @@ import random
 from constants import *
 from classes.MovingObject import MovingObject
 from classes.Obstacle import Obstacle
+from classes.Booster import Booster
 from classes.ImageObject import ImageObject
 from classes.Mario import Mario
 import time
@@ -16,9 +17,21 @@ class Game:
         self.add_initial_objects()
         self.__can_move = True
         self.__is_game_over = False
+        self.__points = 0
+        self.__count_before_add_point = 0
+
+    def show_points_text(self):
+        self.__count_before_add_point += 1
+        if self.__count_before_add_point == TICKS_BEFORE_POINT_IS_ADDED:
+            self.__count_before_add_point = 0
+            self.__points += 1
+        font = pygame.font.SysFont('Arial', POINTS_TEXT_SIZE)
+        self.__screen.blit(font.render("Points: " + str(self.__points), True, BLACK), (POINTS_TEXT_X, POINTS_TEXT_Y))
+        pygame.display.flip()
 
     def is_game_over(self):
         self.check_if_game_over()
+        self.show_points_text()
         return self.__is_game_over
 
     def add_initial_objects(self):
@@ -29,18 +42,23 @@ class Game:
                              SUPER_MARIO_WIDTH, SUPER_MARIO_HEIGHT, SUPER_MARIO_IMG_PATH)
 
         for i in range(3):
-            self.__create_new_moving_object(i)
+            self.__create_new_obstacle(i)
 
-    def __create_new_moving_object(self, space_between_obj=1):
+        for i in range(7):
+            self.__create_new_background_object(i)
+
+        self.__create_new_booster(4)
+
+    def __create_new_obstacle(self, space_between_obj=1):
         rand_height = random.randint(0, 1)
         if rand_height == 1:
             # The moving object is on the ground
-            rand_moving_object = random.randint(1, len(GROUND_MOVING_OBJECTS_IMAGES))
-            moving_objects_image = GROUND_MOVING_OBJECTS_IMAGES[rand_moving_object - 1]
+            rand_moving_object = random.randint(1, len(GROUND_OBSTACLE_IMAGES))
+            moving_objects_image = GROUND_OBSTACLE_IMAGES[rand_moving_object - 1]
         else:
             # The moving object is on the sky
-            rand_moving_object = random.randint(1, len(SKY_MOVING_OBJECTS_IMAGES))
-            moving_objects_image = SKY_MOVING_OBJECTS_IMAGES[rand_moving_object - 1]
+            rand_moving_object = random.randint(1, len(SKY_OBSTACLE_IMAGES))
+            moving_objects_image = SKY_OBSTACLE_IMAGES[rand_moving_object - 1]
 
         y_pos = TOP_Y_YOS + rand_height * SPACE_BETWEEN_MOVING_OBJECTS_Y
         obstacle = Obstacle(self.__screen,
@@ -49,6 +67,35 @@ class Game:
 
         self.__object_list.append(obstacle)
 
+    def __create_new_background_object(self, space_between_obj=1):
+        rand_height = random.randint(0, 3)
+
+        rand_moving_object = random.randint(1, len(SKY_BACKGROUND_OBJECTS_IMAGES))
+        moving_objects_image = SKY_BACKGROUND_OBJECTS_IMAGES[rand_moving_object - 1]
+        width = SKY_BACKGROUND_WIDTH[rand_moving_object - 1]
+        height = SKY_BACKGROUND_HEIGHT[rand_moving_object - 1]
+        y_pos = TOP_Y_YOS_FOR_BACKGROUND_OBJECTS + rand_height * SPACE_BETWEEN_MOVING_OBJECTS_Y
+        bg_object = MovingObject(self.__screen,
+                                 WINDOW_WIDTH - ENEMY_SIZE + SPACE_BETWEEN_BACKGROUND_OBJECTS_X * space_between_obj,
+                                 y_pos, width, height, moving_objects_image, BACKGROUND_OBJECTS_SPEED)
+
+        self.__object_list.append(bg_object)
+
+    def __create_new_booster(self, space_between_obj=1):
+        rand_height = random.randint(0, 1)
+
+        rand_moving_object = random.randint(1, len(BOOSTER_IMAGES))
+        moving_objects_image = BOOSTER_IMAGES[rand_moving_object - 1]
+        boosters_points = BOOSTER_POINTS[rand_moving_object - 1]
+
+        y_pos = TOP_Y_YOS + rand_height * SPACE_BETWEEN_MOVING_OBJECTS_Y
+        bg_object = Booster(self.__screen,
+                            WINDOW_WIDTH - ENEMY_SIZE + SPACE_BETWEEN_BACKGROUND_OBJECTS_X * space_between_obj,
+                            y_pos, BOOSTERS_SIZE, BOOSTERS_SIZE, moving_objects_image, BOOSTERS_SPEED,
+                            boosters_points)
+
+        self.__object_list.append(bg_object)
+
     def move_objects(self):
         for value in self.__object_list:
             if isinstance(value, MovingObject):
@@ -56,7 +103,12 @@ class Game:
 
                 if value.is_out_of_screen():
                     self.__object_list.remove(value)
-                    self.__create_new_moving_object()
+                    if isinstance(value, Obstacle):
+                        self.__create_new_obstacle()
+                    elif isinstance(value, Booster):
+                        self.__create_new_booster()
+                    else:
+                        self.__create_new_background_object()
 
     def display_objects_to_screen(self):
         """
@@ -87,66 +139,55 @@ class Game:
         elif direction == "right":
             self.__mario.move_right()
         elif direction == "jump":
-            self.make_mario_jump()
+            self.make_mario_jump_or_bend("jump")
         elif direction == "bend":
-            self.__mario.bend()
+            self.make_mario_jump_or_bend("bend")
 
-    def make_mario_jump(self):
+    def make_mario_jump_or_bend(self, action):
         if not self.__can_move:
             return
 
         self.__can_move = False
         self.display_objects_to_screen()
 
-        ans = self.__mario.jump()
+        if action == "jump":
+            ans = self.__mario.jump()
+        else:
+            ans = self.__mario.bend()
 
         while not self.is_game_over() and ans != "done":
             self.move_objects()
+            self.show_points_text()
             self.display_objects_to_screen()
-            ans = self.__mario.jump()
-            pygame.display.flip()
-
-        # for i in range(10):
-        #     self._y_pos -= MINI_MOVE_IN_Y
-        #     pygame.display.flip()
-        #     time.sleep(0.1)
-        #
-        # time.sleep(0.3)
-        #
-        # for i in range(10):
-        #     self._y_pos += MINI_MOVE_IN_Y
-        #     pygame.display.flip()
-        #     time.sleep(0.1)
+            if action == "jump":
+                ans = self.__mario.jump()
+            else:
+                ans = self.__mario.bend()
 
         self.__can_move = True
 
     def check_if_game_over(self):
         for obj in self.__object_list:
-            if isinstance(obj, Obstacle):
-                obj_location = {'x': obj.x_pos, 'y': obj.y_pos}
-                obj_size = {'width': obj.width, 'height': obj.height}
+            obj_location = {'x': obj.x_pos, 'y': obj.y_pos}
+            obj_size = {'width': obj.width, 'height': obj.height}
 
+            if self.__mario.is_object_on_image(obj_location, obj_size):
+                if isinstance(obj, Obstacle):
+                    self.__is_game_over = True
+                    break
+                elif isinstance(obj, Booster):
+                    # print("add extra ", obj.get_extra_points(), " points!")
+                    self.__points += obj.get_extra_points()
+                    self.__object_list.remove(obj)
+                    self.__create_new_booster()
+            """
+            if isinstance(obj, Obstacle):
                 if self.__mario.is_object_on_image(obj_location, obj_size):
                     self.__is_game_over = True
-
-
-"""
-    def typing(self, ascii_val):
-        
-        The function is called as soon as one of the keyboard keys is pressed.
-        :param ascii_val: The key on the keyboard that was pressed by the user (Its ascii value).
-        :return: None
-        
-        # if ascii_val == LEFT_ARROW:
-        if ascii_val == pygame.K_LEFT:
-            self.__super_mario.move_left()
-        # elif ascii_val == RIGHT_ARROW:
-        elif ascii_val == pygame.K_RIGHT:
-            self.__super_mario.move_right()
-        # elif ascii_val == UP_ARROW:
-        elif ascii_val == pygame.KEYUP:
-            print("move up")
-        # elif ascii_val == DOWN_ARROW:
-        elif ascii_val == pygame.KEYDOWN:
-            print("move down")
+                    break
+            elif isinstance(obj, Booster):
+                if self.__mario.is_object_on_image(obj_location, obj_size):
+                    print("add extra ", obj.get_extra_points(), " points!")
+                    self.__object_list.remove(obj)
+                    self.__create_new_booster()
             """

@@ -35,6 +35,7 @@ def main():
 def on_tick():
     if not new_game.is_game_over():
         new_game.move_objects()
+        new_game.show_points_text()
         new_game.display_objects_to_screen()
         keys = pygame.key.get_pressed()
         if keys[pygame.K_LEFT]:
@@ -45,6 +46,7 @@ def on_tick():
             new_game.move_mario("jump")
         elif keys[pygame.K_DOWN]:
             new_game.move_mario("bend")
+        # time.sleep(0.3)
 
 
 def running():
@@ -81,7 +83,11 @@ def show_game_over(screen):
         for event in pygame.event.get():
             if event.type == pygame.QUIT or event.type == pygame.KEYDOWN:
                 pygame.quit()
-
+"""
+font = pygame.font.SysFont('Arial', TEXTBOX_TEXT_SIZE)
+self._screen.blit(font.render("text", True, BLACK), (self._x_pos, self._y_pos))
+pygame.display.flip()
+"""
 
 # def draw_text(screen, text, size, width, height):
 #     font = pygame.font.SysFont(, size)
