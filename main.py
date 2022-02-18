@@ -20,14 +20,13 @@ def main():
     status = running()
     while status:
         if new_game.is_game_over():
-            print('WHER')
             show_game_over(screen)
+        else:
+            # Check if the player wants to end the game
+            status = running()
+            if status:
+                on_tick()
 
-        # Check if the player wants to end the game
-        status = running()
-        if status:
-            on_tick()
-        # draw_text(screen, "GAME OVER", 64, WINDOW_WIDTH / 2, WINDOW_HEIGHT / 4)
     # Close The window
     pygame.quit()
 
@@ -76,23 +75,20 @@ def running():
 
 
 def show_game_over(screen):
-    # draw_text(screen, "GAME OVER", 64, WINDOW_WIDTH / 2, WINDOW_HEIGHT / 4)
+    draw_text(screen, "GAME OVER", 64, WINDOW_WIDTH / 2 - 180, WINDOW_HEIGHT / 4)
     pygame.display.flip()
     waiting = True
     while waiting:
         for event in pygame.event.get():
             if event.type == pygame.QUIT or event.type == pygame.KEYDOWN:
+                waiting = False
                 pygame.quit()
-"""
-font = pygame.font.SysFont('Arial', TEXTBOX_TEXT_SIZE)
-self._screen.blit(font.render("text", True, BLACK), (self._x_pos, self._y_pos))
-pygame.display.flip()
-"""
 
-# def draw_text(screen, text, size, width, height):
-#     font = pygame.font.SysFont(, size)
-#     img = font.render(text, True, BLACK)
-#     screen.blit(img, (20, 20))
+
+def draw_text(screen, text, size, width, height):
+    font = pygame.font.SysFont('Arial', size)
+    img = font.render(text, True, BLACK)
+    screen.blit(img, (width, height))
 
 
 main()

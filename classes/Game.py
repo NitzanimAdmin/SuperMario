@@ -27,7 +27,6 @@ class Game:
             self.__points += 1
         font = pygame.font.SysFont('Arial', POINTS_TEXT_SIZE)
         self.__screen.blit(font.render("Points: " + str(self.__points), True, BLACK), (POINTS_TEXT_X, POINTS_TEXT_Y))
-        pygame.display.flip()
 
     def is_game_over(self):
         self.check_if_game_over()
@@ -47,7 +46,7 @@ class Game:
         for i in range(7):
             self.__create_new_background_object(i)
 
-        self.__create_new_booster(4)
+        self.__create_new_booster(15)
 
     def __create_new_obstacle(self, space_between_obj=1):
         rand_height = random.randint(0, 1)
@@ -122,7 +121,6 @@ class Game:
         self.__mario.display_image_to_screen()
 
 
-
     def on_click(self, mouse_pos):
         """
         Tests on the click of a button and checks which button was pressed using the 'Current Screen' variable.
@@ -159,6 +157,7 @@ class Game:
             self.move_objects()
             self.show_points_text()
             self.display_objects_to_screen()
+            pygame.display.flip()
             if action == "jump":
                 ans = self.__mario.jump()
             else:
@@ -180,14 +179,3 @@ class Game:
                     self.__points += obj.get_extra_points()
                     self.__object_list.remove(obj)
                     self.__create_new_booster()
-            """
-            if isinstance(obj, Obstacle):
-                if self.__mario.is_object_on_image(obj_location, obj_size):
-                    self.__is_game_over = True
-                    break
-            elif isinstance(obj, Booster):
-                if self.__mario.is_object_on_image(obj_location, obj_size):
-                    print("add extra ", obj.get_extra_points(), " points!")
-                    self.__object_list.remove(obj)
-                    self.__create_new_booster()
-            """
