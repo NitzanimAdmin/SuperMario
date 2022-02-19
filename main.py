@@ -21,6 +21,7 @@ def main():
     while status:
         if new_game.is_game_over():
             show_game_over(screen)
+            break
         else:
             # Check if the player wants to end the game
             status = running()
@@ -60,10 +61,10 @@ def running():
         if event.type == pygame.QUIT:
             pygame.quit()
             status = False
-        elif event.type == pygame.MOUSEBUTTONDOWN:
-            # 1 is the left mouse button, 2 is middle, 3 is right.
-            if event.button == 1:
-                new_game.on_click(event.pos)
+        # elif event.type == pygame.MOUSEBUTTONDOWN:
+        #     # 1 is the left mouse button, 2 is middle, 3 is right.
+        #     if event.button == 1:
+        #         new_game.on_click(event.pos)
         elif event.type == pygame.KEYDOWN:
             if event.key == pygame.K_ESCAPE:
                 pygame.quit()

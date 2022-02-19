@@ -14,13 +14,15 @@ class Game:
         self.__screen = screen
         self.__object_list = []
         self.__mario = None
-        self.add_initial_objects()
         self.__can_move = True
         self.__is_game_over = False
         self.__points = 0
         self.__count_before_add_point = 0
+        self.add_initial_objects()
 
     def show_points_text(self):
+        if self.__is_game_over:
+            return
         self.__count_before_add_point += 1
         if self.__count_before_add_point == TICKS_BEFORE_POINT_IS_ADDED:
             self.__count_before_add_point = 0
@@ -121,16 +123,16 @@ class Game:
         self.__mario.display_image_to_screen()
 
 
-    def on_click(self, mouse_pos):
-        """
-        Tests on the click of a button and checks which button was pressed using the 'Current Screen' variable.
-        :param mouse_pos: The position of the mouse click.
-        :return: None
-        """
-        print("click")
+    # def on_click(self, mouse_pos):
+    #     """
+    #     Tests on the click of a button and checks which button was pressed using the 'Current Screen' variable.
+    #     :param mouse_pos: The position of the mouse click.
+    #     :return: None
+    #     """
+    #     print("click")
 
     def move_mario(self, direction):
-        if not self.__can_move:
+        if not self.__can_move or self.__is_game_over:
             return
         if direction == "left":
             self.__mario.move_left()
