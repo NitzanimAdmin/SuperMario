@@ -32,8 +32,8 @@ class Game:
 
     def is_game_over(self):
         for obj in self.__object_list:
-            obj_location = {'x': obj.x_pos, 'y': obj.y_pos}
-            obj_size = {'width': obj.width, 'height': obj.height}
+            obj_location = {'x': obj.get_x_pos(), 'y': obj.get_y_pos()}
+            obj_size = {'width': obj.get_width(), 'height': obj.get_height()}
 
             if self.__mario.is_object_on_image(obj_location, obj_size):
                 if isinstance(obj, Obstacle):

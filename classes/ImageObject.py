@@ -32,18 +32,14 @@ class ImageObject:
         else:
             return False
 
-    @property
-    def x_pos(self):
+    def get_x_pos(self):
         return self._x_pos
 
-    @property
-    def y_pos(self):
+    def get_y_pos(self):
         return self._y_pos
 
-    @property
-    def width(self):
+    def get_width(self):
         return self._width
 
-    @property
-    def height(self):
+    def get_height(self):
         return self._height
