@@ -31,7 +31,20 @@ class Game:
         self.__screen.blit(font.render("Points: " + str(self.__points), True, BLACK), (POINTS_TEXT_X, POINTS_TEXT_Y))
 
     def is_game_over(self):
-        self.check_if_game_over()
+        for obj in self.__object_list:
+            obj_location = {'x': obj.x_pos, 'y': obj.y_pos}
+            obj_size = {'width': obj.width, 'height': obj.height}
+
+            if self.__mario.is_object_on_image(obj_location, obj_size):
+                if isinstance(obj, Obstacle):
+                    self.__is_game_over = True
+                    break
+                elif isinstance(obj, Booster):
+                    # print("add extra ", obj.get_extra_points(), " points!")
+                    self.__points += obj.get_extra_points()
+                    self.__object_list.remove(obj)
+                    self.__create_new_booster()
+
         self.show_points_text()
         return self.__is_game_over
 
@@ -122,15 +135,6 @@ class Game:
 
         self.__mario.display_image_to_screen()
 
-
-    # def on_click(self, mouse_pos):
-    #     """
-    #     Tests on the click of a button and checks which button was pressed using the 'Current Screen' variable.
-    #     :param mouse_pos: The position of the mouse click.
-    #     :return: None
-    #     """
-    #     print("click")
-
     def move_mario(self, direction):
         if not self.__can_move or self.__is_game_over:
             return
@@ -166,18 +170,3 @@ class Game:
                 ans = self.__mario.bend()
 
         self.__can_move = True
-
-    def check_if_game_over(self):
-        for obj in self.__object_list:
-            obj_location = {'x': obj.x_pos, 'y': obj.y_pos}
-            obj_size = {'width': obj.width, 'height': obj.height}
-
-            if self.__mario.is_object_on_image(obj_location, obj_size):
-                if isinstance(obj, Obstacle):
-                    self.__is_game_over = True
-                    break
-                elif isinstance(obj, Booster):
-                    # print("add extra ", obj.get_extra_points(), " points!")
-                    self.__points += obj.get_extra_points()
-                    self.__object_list.remove(obj)
-                    self.__create_new_booster()
